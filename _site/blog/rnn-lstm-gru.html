@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by Youssef Raafat
+  Free for personal and commercial use under the MIT license
+  https://github.com/YoussefRaafatNasry/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+
+  
+  
+
+  
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Recurrent Neural Networks&amp;#58; LSTM, GRU"> <!-- content="Recurrent Neural Networks&amp;#58; LSTM, GRU" -->
+  <meta property="og:description" content="Simplified&#58; Theory, Mathematics, and Flow behind RNN, LSTM and GRU">
+
+  <title>Ankit Yadav | Recurrent Neural Networks&#58; LSTM, GRU</title>
+  <meta name="description" content="Simplified&#58; Theory, Mathematics, and Flow behind RNN, LSTM and GRU">
+
+  
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.0/css/all.css">
+
+  <!-- Bootstrap CSS CDN -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <!-- Animate CSS CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css" type="text/css"/>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+
+</head>
+
+
+<body class="d-flex flex-column h-100">
+
+  <main class="flex-shrink-0 container mt-5">
+  <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="/blog"><h5><b>Ankit Yadav</b><span style="color: #A9A9A9;"> &nbsp;|&nbsp; Blog</span></h5></a>
+  
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link active" href="/blog">Home</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+    </div>
+  </div>
+
+</nav>
+
+  <div class="col-lg-10 mx-auto mt-5 post">
+  <h1><b>Recurrent Neural Networks&#58; LSTM, GRU</b></h1>
+
+<p class="post-metadata text-muted">
+  10 January 2021 -  
+  <b>19 mins read time</b>
+
+  <br>
+<!--Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#rnn">
+      <span class="tag badge badge-pill text-primary border border-primary">RNN</span>
+    </a>
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#nlp">
+      <span class="tag badge badge-pill text-primary border border-primary">NLP</span>
+    </a>
+    -->
+
+</p>
+
+<figure class="figure w-100">
+  <img src="/assets/rnn-images/rnntop.png" class="figure-img img-fluid rounded" alt="" /></figure>
+
+<h2 id="overview"><strong>Overview</strong></h2>
+<p><br />
+In this article, I have collated my learnings of Recurrent Neural Networks and its two other implementations - LSTM and GRU, in a simple to understand language, all at one place. This post breaks down - in simpler terms - the Theory, Mathematics, and Flow behind Recurrent Neural Networks and their complex equations. 
+<br /><br /></p>
+
+<h3 id="table-of-content"><strong>Table of Content</strong></h3>
+<p><br /></p>
+
+<p>• <a href="#introduction-to-recurrent-nn">Recurrent Neural Network</a><br />
+  • <a href="#working-of-recurrent-neural-network">Working of RNN</a><br />
+  • <a href="#why-recurrent-neural-network-suffers">Why RNN Suffers?</a><br /></p>
+
+<p>• <a href="#introduction-to-long-short-term-memory-lstm">Long Short Term Memory (LSTM)</a><br />
+  • <a href="#memory-cell">Memory Cell</a><br />
+  • <a href="#gates">Gates</a><br />
+  • <a href="#flow-of-information-in-a-lstm-cell">Flow of Information in a LSTM Cell</a><br />
+   • <a href="#i-inputs-and-outputs-in-lstm-cell">i. Inputs and Outputs</a><br />
+   • <a href="#ii-candidate-value-lstm">ii. Candidate Value</a><br />
+   • <a href="#iii-input-forget-output-gates-lstm">iii. Input, Forget, Output Gates</a><br />
+   • <a href="#iv-cell-state--working-of-forget-and-input-gates-lstm">iv. New Cell State: Working of Forget, Input Gates</a><br />
+   • <a href="#v-hidden-state--working-of-output-gate-lstm">v. New Hidden State: Working of Output Gate</a><br /></p>
+
+<p>• <a href="#introduction-to-gated-recurrent-units-gru">Gated Recurrent Units (GRU)</a><br />
+  • <a href="#flow-of-information-in-gru">Flow of Information in a GRU cell</a><br />
+   • <a href="#i-inputs-and-outputs-in-gru-cell">i. Inputs and Outputs</a><br />
+   • <a href="#ii-candidate-value-gru">ii. Candidate Value</a><br />
+   • <a href="#iii-new-hidden-state--working-of-update-gate-gru">iii. New Hidden State: Working of Update Gate</a><br />
+<br /></p>
+
+<h2 id="introduction-to-recurrent-nn"><strong>Introduction to Recurrent NN</strong></h2>
+<p><br />
+Recurrent Neural Network is a type of Neural Network where the output from the previous cell is fed into the next cell, and so on. This way the parameters learned from the previous cells are shared across the network. Whereas in Traditional Neural Networks, each Input (x) is mapped to its corresponding Output (y) and the learned parameters for the inputs are not shared across the network.</p>
+
+<figure class="figure w-100">
+  <img src="/assets/rnn-images/annvsrnn.png" class="figure-img img-fluid rounded" alt="&lt;b&gt;Traditional Neural Network vs Recurrent Neural Network.&lt;/b&gt;" /><figcaption class="figure-caption text-center"><b>Traditional Neural Network vs Recurrent Neural Network.</b></figcaption></figure>
+
+<p>In simple terms:</p>
+<ul>
+  <li>
+    <p>In the <strong>Traditional Neural Network</strong>, the parameters learned for one training example are <strong>independent</strong> of the parameters learned from the rest of the training examples.</p>
+  </li>
+  <li>
+    <p>In the <strong>Recurrent Neural Network</strong>, the parameters learned for one training example are <strong>dependent</strong> on the parameters learned from the rest of the training examples.</p>
+  </li>
+</ul>
+
+<p>RNNs are very useful in Natural Language Processing (NLP) and Natural Language Understanding (NLU) where the meaning of each word is understood based on the context from previous words. They have a wide variety of applications in Sequence Generation, Music Generation, Machine Language Translation, Sentiment Analysis, Image Captioning, and many more.</p>
+
+<p>These kinds of networks are mostly used in learning features in textual data. 
+<br /><br /></p>
+
+<h3 id="working-of-recurrent-neural-network"><strong>Working of Recurrent Neural Network</strong></h3>
+<p><br />
+Let’s take an example of Movie Review: In a review – “<b><span style="color:#f9cb9c">This </span><span style="color:#93c47d">movie </span><span style="color:#3c78d8">was </span><span style="color:#f1c232">brilliant</span></b>.”, the word “brilliant” is based on the previous words “This movie was”. So, a RNN learns that the word “brilliant” is used to describe the “movie”. Hence the model predicts it as a positive review.</p>
+
+<figure class="figure w-100">
+  <img src="/assets/rnn-images/rnn.png" class="figure-img img-fluid rounded" alt="&lt;b&gt;Example: Recurrent Neural Network for Sentiment Analysis.&lt;/b&gt;" /><figcaption class="figure-caption text-center"><b>Example: Recurrent Neural Network for Sentiment Analysis.</b></figcaption></figure>
+
+<p>Understanding the above Figure:</p>
+
+<ul>
+  <li>
+    <p>The review “The movie was brilliant.” is broken into words (This, movie, was, brilliant) and each word is treated as a timestamp (total 4 timestamps, 1 for each word</p>
+  </li>
+  <li>
+    <p>The values – x1, x2, x3, x4 are the corresponding embedding vectors for the words – This, movie, was, brilliant</p>
+  </li>
+</ul>
+<p align="center">
+	This&nbsp;&nbsp;&nbsp;&nbsp; → &nbsp;&nbsp;embedding vector x1<br />
+	Movie &nbsp;→ &nbsp;&nbsp;embedding vector x2<br />
+	Was &nbsp;&nbsp;&nbsp;&nbsp;→ &nbsp;&nbsp;embedding vector x3<br /> 
+	Brilliant&nbsp;→ &nbsp;&nbsp;embedding vector x4
+<br />
+  
+</p>
+
+<ul>
+  <li>
+    <p>The values – h1, h2, h3, h4 are the hidden states at each timestamp. The exception is h0, which is initialized beforehand to be fed into the first timestamp.</p>
+
+    <p><strong>Definition of Hidden State:</strong> Hidden State contains the contextual information, in form of numbers, from current and past cells/timestamps.</p>
+
+    <p><strong>Calculation of Hidden State</strong>: The inputs h<t-1> and x<t> at every timestamp “t” multiplied with their weights and added with some bias, when passed through a non-linearity function returns what’s called an <b>activation value</b>, often called a hidden state.</t></t-1></p>
+
+    <p style="font-family: 'Times New Roman'; font-size:125%" align="center">h<sup>t</sup> = g(W<sub>hh</sub>* h<sup>t-1</sup> + W<sub>xh</sub>*x<sup>t</sup> + b)<p><br />
+	
+  Because the hidden state h<sup>t</sup> uses both h<sup>t-1</sup> and x<sup>t</sup> as inputs, thus it contains the information from the previous RNN cells as well as the current RNN cell. In the  example, the hidden state h&lt;3&gt; uses h\&lt;2&gt; as well as x\&lt;3&gt; as inputs, thus it contains the information up until the 3rd cell i.e. up until “This movie was”. This hidden state h&lt;3&gt; is then fed into the 4th RNN cell, where the information for word “brilliant” is incorporated and a new hidden state h&lt;4&gt; is returned.
+
+</p></p>
+  </li>
+  <li>
+    <p>Hidden State h&lt;4&gt; from the last RNN cell is passed through a Sigmoid Function to get “ŷ” and based on a threshold of 0.5, the review will be either classified as positive or negative.</p>
+  </li>
+  <li>
+    <p>Difference between <em>ŷ</em> and <em>y</em> is is called Error, which is used to calculate Loss. Loss is then backpropagation through the entire RNN through time, and each parameter is updated based on the gradients calculated. This goes on for multiple epochs.
+<br /><br /></p>
+  </li>
+</ul>
+
+<h3 id="why-recurrent-neural-network-suffers"><strong>Why Recurrent Neural Network Suffers?</strong></h3>
+<p><br />
+The major drawback of a RNN is that it cannot remember long term information. This happens because the derivatives / gradients from the past cells become smaller and smaller as the distance increases. This phenomenon is known as Vanishing Gradients.</p>
+
+<p><strong>How does the Gradients Vanish?</strong>
+During the Forward Propagation, every time a hidden state is calculated, some new information from the current timestamp is baked into the hidden state. To make room for this new information, the old information has to be shrinked down. As it happens, proportion of the information from the distant cells/ timestamps shrinks down to very small values.</p>
+
+<p>During the Backward Propagation, the loss is back propagated and gradients are calculated through time. At each timestamp, the information from distant timestamps was already shrunk down to very small numbers, hence the calculated gradients get way smaller. At any particular timestamp, the gradients for distant timestamps eventually reaches almost 0, and when it happens the information from them is almost completely lost.</p>
+
+<figure class="figure w-100">
+  <img src="/assets/rnn-images/rnn-gradient.png" class="figure-img img-fluid rounded" alt="Visualizing Vanishing Gradients in Recurrent Neural Network." /><figcaption class="figure-caption text-center">Visualizing Vanishing Gradients in Recurrent Neural Network.</figcaption></figure>
+
+<p><strong>Lack of Control over Information</strong>:
+One of the other drawbacks of RNN, is that it does not offer any control over information passed on from the different timestamps/cells. There is no finer control over what relevant information to preserve and what relevant information to discard. Even the irrelevant information is passed onto the next cell, which takes up the space which could have been used for new relevant information.
+<br /><br /></p>
+<h2 id="introduction-to-long-short-term-memory-lstm"><strong>Introduction to Long Short Term Memory (LSTM)</strong></h2>
+<p><br />
+Recurrent Neural Network suffers from the problem of vanishing gradients and lack of control over information passed on. This makes them bad at learning long term connections.</p>
+
+<p>A more robust implementation of recurrent networks is called LSTM, which is very effective at dealing with the issues faced by Traditional RNN. LSTM outperforms it in terms of learning both the long term and the short term dependencies, hence the name <strong>Long-Short Term Memory</strong>. It introduces two new concepts viz. Memory Cell and Gates.</p>
+
+<figure class="figure w-100">
+  <img src="/assets/rnn-images/lstm-layer.png" class="figure-img img-fluid rounded" alt="&lt;b&gt;A LSTM Layer consisting of 3 Cells/Timestamps.&lt;/b&gt;" /><figcaption class="figure-caption text-center"><b>A LSTM Layer consisting of 3 Cells/Timestamps.</b></figcaption></figure>
+
+<h3 id="memory-cell"><strong>Memory Cell</strong></h3>
+<p><br />
+Firstly, the LSTM introduces the concept of Memory Cell (denoted by the letter “c”). The Memory Cell is the memory of a LSTM cell. Exactly like humans have memory through which we can remember details from way back in life, LSTM has a memory cell that allows it to remember information from very distant timestamps.</p>
+
+<p>Compared to a RNN cell which outputs only the “hidden state”, a LSTM cell outputs both “hidden state” as well as “cell state”.</p>
+<ul>
+  <li>
+    <p>Hidden State acts more like a short-term memory of the network.</p>
+  </li>
+  <li>
+    <p>Whereas, Cell State acts like a long-term memory of the network.
+<br /><br /></p>
+  </li>
+</ul>
+
+<h3 id="gates"><strong>Gates</strong></h3>
+<p><br />
+Secondly, the LSTM introduces the concept of Gates. Gates can be thought of exactly like the doors we have in houses, only certain people who are relevant will be allowed to enter through the door and rest are kept outside. Similarly, Gates allow LSTM to control what information is to be kept/withheld and what information is to be forgotten.</p>
+
+<p>As we saw in Traditional RNN, entire information – whether relevant or not – was passed to the next RNN cell/timestamp. But Gates regulate the flow of information into and out of the cell, and only the relevant information is passed through.
+<br /><br /></p>
+
+<h3 id="flow-of-information-in-a-lstm-cell"><strong>Flow of Information in a LSTM Cell</strong></h3>
+<p><br />
+LSTM involves some complex mathematical equations. Best way to understand the intuition and meaning of those equations is to look at the flow of information in a LSTM network.</p>
+
+<figure class="figure w-100">
+  <img src="/assets/rnn-images/inside-lstm.png" class="figure-img img-fluid rounded" alt="Inside a LSTM Cell/Timestamp." /><figcaption class="figure-caption text-center">Inside a LSTM Cell/Timestamp.</figcaption></figure>
+
+<p><br /></p>
+
+<p>Understanding the LSTM Cell in above figure:</p>
+
+<h4 id="i-inputs-and-outputs-in-lstm-cell"><strong>i. Inputs and Outputs in LSTM cell</strong></h4>
+<p><br />
+First, we need to know what are the Inputs and what are the Outputs of a LSTM cell/timestamp.</p>
+
+<figure class="figure w-100">
+  <img src="/assets/rnn-images/lstm-io.png" class="figure-img img-fluid rounded" alt="&lt;b&gt;LSTM Cell: Inputs and Outputs.&lt;/b&gt;" /><figcaption class="figure-caption text-center"><b>LSTM Cell: Inputs and Outputs.</b></figcaption></figure>
+
+<p><strong>Inputs</strong>:</p>
+<ul>
+  <li>
+    <p>c&lt;t-1&gt;: “cell state” from previous LSTM cell/timestamp</p>
+  </li>
+  <li>
+    <p>h&lt;t-1&gt;: “hidden state” from previous LSTM cell/timestamp</p>
+  </li>
+  <li>
+    <p>x&lt;t&gt;: embedding vector for the word at timestamp “t”</p>
+  </li>
+</ul>
+
+<p><strong>Outputs</strong>:</p>
+<ul>
+  <li>
+    <p>c&lt;t&gt;: “cell state” of LSTM cell/timestamp</p>
+  </li>
+  <li>
+    <p>h&lt;t&gt;: “hidden state” of LSTM cell/timestamp
+<br /><br /></p>
+  </li>
+</ul>
+
+<h4 id="ii-candidate-value-lstm"><strong>ii. Candidate Value (LSTM)</strong></h4>
+<p><br />
+A candidate value contains new information to be baked into the outputs of a cell.</p>
+
+<p>However, the extent to which this value will be used in the outputs of the cell will be decided by the (Input) Gate. It may be possible that none of this information is used or vice versa. This makes it just a candidate for replacing the values in the outputs of the cell. And because of this reason, this value is called a “candidate” value. It is denoted by c̃ (pronounced as c tilde).</p>
+
+<figure class="figure w-100">
+  <img src="/assets/rnn-images/lstm-ctilde.png" class="figure-img img-fluid rounded" alt="&lt;b&gt;LSTM Cell: Candidate Value.&lt;/b&gt;" /><figcaption class="figure-caption text-center"><b>LSTM Cell: Candidate Value.</b></figcaption></figure>
+
+<p>It is calculated using the “previous hidden state” h<t-1> and the “word” x<t>. Given by the equation:
+<br /><br /></t></t-1></p>
+
+<p style="font-family: 'Times New Roman'; font-size:125%" align="center">c̃<sup>&nbsp;&nbsp;t</sup> = tanh(W<sub>ch</sub>* h<sup>t-1</sup> + W<sub>cx</sub>*x<sup>t</sup> + b<sub>c</sub>)</p>
+<p><br /></p>
+
+<p><strong>Components of the equation</strong>:</p>
+<ul>
+  <li>
+    <p>“previous hidden state” h<sup>t-1</sup> contains information (mostly short-term) from previous timestamps.</p>
+  </li>
+  <li>
+    <p>“word” x<sup>t</sup> contains new information about word at the current timestamp.</p>
+  </li>
+  <li>
+    <p>W<sub>ch</sub> and W<sub>cx</sub> are the weight parameters which will be learned by the cell at current cell/timestamp for h<sup>t-1</sup> and x<sup>t</sup> respectively.</p>
+  </li>
+  <li>
+    <p>b<sub>c</sub> is the bias parameter</p>
+  </li>
+</ul>
+
+<p>So the Candidate Value contains the <strong>“Information from previous hidden state”</strong> + <strong>“Information from current word”</strong> + Some <strong>“Bias”</strong>. This is then passed through the <strong>“tanh”</strong> function which controls the vanishing and exploding gradients problem by returning values between -1 and 1.
+<br /><br /></p>
+
+<h4 id="iii-input-forget-output-gates-lstm"><strong>iii. Input, Forget, Output Gates (LSTM)</strong></h4>
+<p><br />
+Gates allow the network to control what information is to be kept and upto what extent. They are used to control the flow of information in outputs of a cell i.e. in “cell state” and “hidden state”. There are three gates, each plays a different role. They return values between 0 and 1. Each gate can be thought of like knobs, if turned to 0 it will “discard everything” and if turned to 1 it will “keep everything”, but usually the values are somewhere in between 0 and 1 so that some proportion of information is kept.</p>
+
+<p>A typical gate is given by the following equation:
+<br /><br /></p>
+
+<p style="font-family: 'Times New Roman'; font-size:125%" align="center">𝚪 = Sigmoid(W* h<sup>t-1</sup> + W* x<sup>t</sup> + b)</p>
+<p><br />
+The above equation looks very similar to the equation for candidate value. The difference is the Sigmoid Function, which returns values between 0 and 1. These values when multiplied with information (such as candidate value, etc), decides how much information is to be used i.e. it dictates the flow of information in and out of a LSTM cell.</p>
+
+<p>Equation for Gates viz Forget, Input, and Output:
+<br /><br /></p>
+<p style="font-family: 'Times New Roman'; font-size:125%" align="center">
+𝚪<sub>f</sub> = Sigmoid(W<sub>fh</sub>* h<sup>t-1</sup> + W<sub>fx</sub>* x<sup>t</sup> + b<sub>f</sub>)<br /><br />
+𝚪<sub>i</sub> = Sigmoid(W<sub>ih</sub>* h<sup>t-1</sup> + W<sub>ix</sub>* x<sup>t</sup> + b<sub>i</sub>)<br /><br />
+𝚪<sub>o</sub> = Sigmoid(W<sub>oh</sub>* h<sup>t-1</sup> + W<sub>ox</sub>* x<sup>t</sup> + b<sub>o</sub>)
+</p>
+<p><br />
+|Gates|Controls flow of Information to|
+|–|–|
+|“Input Gate” and “Forget Gate”|“cell state c<t>”|
+|“Output Gate”|“hidden state h<t>”|
+<br /><br /></t></t></p>
+
+<h4 id="iv-cell-state--working-of-forget-and-input-gates-lstm"><strong>iv. Cell State // Working of Forget and Input Gates (LSTM)</strong></h4>
+<p><br />
+Cell State is the memory of the LSTM cell. It stores useful information from the previous timestamps, as well as the current timestamp. It is given by the equation:
+<br /></p>
+<p style="font-family: 'Times New Roman'; font-size:125%" align="center">
+c<sup>t</sup> = 𝚪<sub>i</sub>* c̃<sup>&nbsp;&nbsp;t</sup> + 𝚪<sub>f</sub>* c<sup>t-1</sup></p>
+<figure class="figure w-100">
+  <img src="/assets/rnn-images/lstm-cs.png" class="figure-img img-fluid rounded" alt="&lt;b&gt;LSTM Cell: Inputs and Outputs.&lt;/b&gt;" /><figcaption class="figure-caption text-center"><b>LSTM Cell: Inputs and Outputs.</b></figcaption></figure>
+
+<p>In the “cell state” at each cell, two things happen:</p>
+
+<ol>
+  <li>
+    <p><strong>Old Information from distant cells may be used in the outputs of the current cell</strong>: In this case, once that part of old information is used, it is no longer required to be stored in memory.</p>
+
+    <p><strong>Forget Gate</strong> outputs a value between 0 and 1 to determine how much old information from previous memory c<t-1> is to be forgotten. 0 means “completely get rid of that information”, 1 means “keep the entire information”. Any value in between 0 and 1, means keep that proportion of existing information intact.</t-1></p>
+  </li>
+  <li>
+    <p><strong>New Information from the current cell is added to the cell state</strong>: In this case, some new information is to be stored in memory for future use.</p>
+
+    <p><strong>Input Gate</strong> outputs a value between 0 and 1 to determine how much new information from “candidate value c tilde <t>” is to be inserted in the memory.</t></p>
+  </li>
+</ol>
+
+<p>The new memory c<sup>t</sup> comprises “<strong>new information from candidate value c̃</strong>” + “<strong>information from previous memory c<sup>t-1</sup> which is still useful</strong>”.
+<br /><br /></p>
+
+<h4 id="v-hidden-state--working-of-output-gate-lstm"><strong>v. Hidden State // Working of Output Gate (LSTM)</strong></h4>
+<p><br />
+Hidden State contains the <strong>information which is to be disclosed to the next LSTM cell/timestamp</strong>. The cell state c<sup>t</sup> is used along with the Output Gate which determines what extent of information from memory cell is to be revealed in the hidden state h<sup>t</sup>.</p>
+
+<p>The Hidden State uses the “tanh” function to avoid the problem of exploding and vanishing gradients by converting the values between -1 and 1.
+<br /></p>
+<p style="font-family: 'Times New Roman'; font-size:125%" align="center">
+h<sup>t</sup> = 𝚪<sub>o</sub> * tanh(c<sup>t</sup>)</p>
+<figure class="figure w-100">
+  <img src="/assets/rnn-images/lstm-hs.png" class="figure-img img-fluid rounded" alt="&lt;b&gt;LSTM Cell: Inputs and Outputs.&lt;/b&gt;" /><figcaption class="figure-caption text-center"><b>LSTM Cell: Inputs and Outputs.</b></figcaption></figure>
+
+<p><strong>In conclusion</strong>,</p>
+<ul>
+  <li>
+    <p>a LSTM cell gets as input: “previous cell state”, “previous hidden state” and “new word embedding/any other input value” at each timestamp. Based on these 3 inputs, candidate value, 3 gates are calculated. Next,</p>
+  </li>
+  <li>
+    <p>The Forget Gate is multiplied with “previous cell state” and to find out what <strong>old unnecessary information</strong> is to be <strong>forgotten</strong>.</p>
+  </li>
+  <li>
+    <p>The Insert Gate is multiplied with “candidate value” to find out what <strong>new information</strong> is to be <strong>inserted</strong>.</p>
+  </li>
+  <li>
+    <p>This gives us the “new cell state”.</p>
+  </li>
+  <li>
+    <p>The Output Gate is multiplied with the “new cell state” to find out what information is to be dicslosed in the “new hidden state”.</p>
+  </li>
+  <li>
+    <p>These two outputs are then fed onto the next LSTM <strong>cell</strong>. This goes on for all the timestamps. And when it’s done, the output of the LSTM <strong>layer</strong>, can then be fed to the next Layer in the Neural Network.</p>
+  </li>
+</ul>
+
+<p>To Remember: Based on the timestamps in our dataset, the number of <strong>Cells</strong> in a LSTM <strong>Layer</strong> are determined. This is the reason why each input is padded to be of the same size in the preprocessing stage.
+<br /><br /></p>
+
+<h2 id="introduction-to-gated-recurrent-units-gru"><strong>Introduction to Gated Recurrent Units (GRU)</strong></h2>
+<p><br />
+In Long Short Term Memory, the concept of Memory Cell was introduced, which acts like a conveyor belt throughout the network storing information from distant timestamps. But LSTM can be computationally expensive. To deal with this issue, a new simpler implementation of LSTM was introduced.</p>
+
+<p>Instead of using a seperate cell state and hidden state, GRU combines the cell state with the hidden state. This simplifies the model and performance wise it does not take that big a hit. Though not as powerful as a LSTM network, it trades off some performance to save time/cost. The concept of Gates still exists in GRU.</p>
+
+<p><strong>Notation-Wise</strong>:</p>
+<ul>
+  <li>
+    <p>In Simple RNN, there is just one output: hidden state h<sup>t</sup>.</p>
+  </li>
+  <li>
+    <p>In LSTM, there are two outputs: hidden state h<sup>t</sup> and cell state c<sup>t</sup>.</p>
+  </li>
+  <li>
+    <p>In GRU, there is just one output, which combines both long term and short term information, it is denoted by c<sup>t</sup> (instead of denoting it by just h<sup>t</sup> like in Simple RNN).
+<br /><br /></p>
+  </li>
+</ul>
+
+<h3 id="flow-of-information-in-gru"><strong>Flow of Information in GRU</strong></h3>
+<p><br />
+There are only a few differences in GRU when compared to LSTM. One of the differences is in output, and the other is in gate.</p>
+
+<p>Unlike a dedicated Forget and Insert Gate in LSTM. GRU only has one gate – Update Gate, taking care of both tasks of updating new information and forgetting old unnecessary information.</p>
+
+<p>Lets understand the flow of GRU in more depth.
+<br /><br /></p>
+
+<h4 id="i-inputs-and-outputs-in-gru-cell"><strong>i. Inputs and Outputs in GRU cell</strong></h4>
+<p><br />
+Input at every GRU cell/timestamp “t”:</p>
+<ul>
+  <li>
+    <p>c&lt;t-1&gt;: old “hidden state”</p>
+  </li>
+  <li>
+    <p>x&lt;t&gt;: embedding vector for the word at timestamp “t”</p>
+  </li>
+</ul>
+
+<p>Output at every LSTM cell/timestamp “t”:</p>
+<ul>
+  <li>c&lt;t&gt;: new “hidden state”
+<br /><br /></li>
+</ul>
+
+<h4 id="ii-candidate-value-gru"><strong>ii. Candidate Value (GRU)</strong></h4>
+<p><br />
+A candidate value contains new information to be baked into the outputs of a cell. A candidate is a potential alternate to replace information in ct. It is denoted by c̃ (pronounced as c tilde). Given by the equation:
+<br /><br /></p>
+
+<p style="font-family: 'Times New Roman'; font-size:125%" align="center">
+c<sup>~ t</sup> = tanh(Wc<sub>cc</sub><sup>t-1</sup> + W<sub>cx</sub>*x<sup>t</sup> + b<sub>c</sub>)
+</p>
+<p><br />
+The equation is very similar to one in LSTM. It is calculated using the “previous hidden state” c<t-1> (containing also the memory cell information) and the “word/any value” x<t>.</t></t-1></p>
+
+<p>Components of the equation:</p>
+<ul>
+  <li>
+    <p>“previous hidden state” c<sup>t-1</sup> contains both long and short-term information.</p>
+  </li>
+  <li>
+    <p>“word” x<sup>t</sup> contains new information about “word” at the current timestamp.</p>
+  </li>
+  <li>
+    <p>W<sub>cc</sub> and W<sub>cx</sub> are the weight parameters which will be learned by the cell at current cell/timestamp for c<sup>t-1</sup> and x<sup>t</sup> respectively.</p>
+  </li>
+  <li>
+    <p>b<sub>c</sub> is the bias parameter.</p>
+  </li>
+</ul>
+
+<p>So the Candidate Value contains the “<strong>Information from previous hidden state</strong>” + “<strong>Information from current word</strong>” + Some “<strong>Bias</strong>”. This is then passed through the “tanh” function which controls the exploding gradients problem by returning values between -1 and 1.
+<br /><br /></p>
+
+<h4 id="iii-new-hidden-state--working-of-update-gate-gru"><strong>iii. New Hidden State // Working of Update Gate (GRU)</strong></h4>
+<p><br />
+Update Gate determines how much of the information from the “candidate value” and “previous state” is to be updated in the hidden state. Its value lies between 0 and 1. It is given by the equation:
+<br /><br /></p>
+
+<p style="font-family: 'Times New Roman'; font-size:125%" align="center">
+𝚪<sub>u</sub> = Sigmoid(W<sub>uc</sub>* c<sup>t-1</sup> + W<sub>ux</sub>* x<sup>t</sup> + b<sub>u</sub>)
+</p>
+<p><br /></p>
+
+<p>Now in this final step, update gate is used along with “previous hidden state” and “candidate value” to determine what proportion of new information and old information is to be kept.</p>
+
+<p>For example, Update gate of 0.4, would means:</p>
+<ul>
+  <li>
+    <p>Keep 40% of information from “candidate value”.</p>
+  </li>
+  <li>
+    <p>Keep (1-0.4) i.e. 60% of the useful information from the “previous hidden state”, and forget the rest.
+<br /><br /></p>
+  </li>
+</ul>
+
+<p style="font-family: 'Times New Roman'; font-size:125%" align="center">
+c<sup>t</sup> = 𝚪<sub>u</sub>* c<sup>~ t</sup> + (1-𝚪<sub>u</sub>)* c<sup>t-1</sup>
+</p>
+<p><br /></p>
+
+<p><strong>In conclusion</strong>, a GRU cell gets as input: “previous hidden state” and “new word embedding/any other input value” at each timestamp. Based on these two inputs, candidate value and update gate is calculated. Next, the Update Gate is multiplied with “previous hidden state” and “candidate value” to find out what proportion of information is to be kept from both of them. This gives us the “new hidden state” which is then fed onto the next GRU cell. This goes on for all the timestamps. And when it’s done, the output of the GRU layer, can then be fed to the next Layer in the Neural Network.</p>
+
+
+
+
+<div class="pt-5">
+  
+</div>
+
+
+</div>
+  </main>
+
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>Ankit Yadav</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:ankit.yadav08@yahoo.com"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/ankitsy"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/ankitsy"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a>
+
+</div>
+
+  
+</footer>
+
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+</body>
+
+</html>

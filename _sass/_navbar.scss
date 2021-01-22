@@ -1,0 +1,35 @@
+.link-after {
+  content: "";
+  display: block;
+  height: 0.15em;
+  background: $primary;
+}
+
+.nav-link,
+.navbar-brand {
+  &::after {
+    @extend .link-after;
+    width: 0;
+    transition: width 0.35s;
+  }
+
+  &:hover::after {
+    width: 0%; // change to 100% for hover line under navbar items (hover)
+  }
+}
+
+.nav-item.active {
+  font-weight: bold;
+
+  &::after {
+    @extend .link-after;
+    width: 0% !important; // change to 100% for line under navbar items (active)
+  }
+}
+
+.navbar-brand {
+  margin-bottom: -14px;
+  &::after {
+    margin-top: -0.25em;
+  }
+}

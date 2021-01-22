@@ -1,0 +1,23 @@
+<div class="card-columns m-3 mt-5">  <!-- Spacing b/w search and cards. Originally m-3 mt-5 -->
+
+  <!-- Local Projects -->
+  {% for post in site.posts %}
+
+    {%- assign project_type  = "local" -%}
+    {%- assign project_id    = post.title | slugify -%}
+    {%- assign project_img   = post.image -%}
+    {%- assign project_name  = post.title -%}
+    {%- assign project_desc  = post.description -%}
+    {%- assign project_tools = post.tags -%}
+
+    {%- if post.external_url -%}
+      {%- assign project_url = post.external_url -%}
+    {%- else -%}
+      {%- assign project_url = post.url | relative_url -%}
+    {%- endif -%}
+
+    {% include blog/project-card.html %}
+
+  {% endfor %}
+
+</div>
