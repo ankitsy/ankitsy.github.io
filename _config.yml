@@ -9,6 +9,7 @@ remote_theme        :
 ### Plugins ###
 plugins:
   - jemoji
+  - jekyll-seo-tag
 
 
 ### Navbar Settings ###
