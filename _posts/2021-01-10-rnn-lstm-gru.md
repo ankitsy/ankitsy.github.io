@@ -1,6 +1,7 @@
 ---
 layout: post
-title: Recurrent Neural Networks&#58; LSTM, GRU
+title: Recurrent Neural Networks Explained
+contents: [Recurrent Neural Network]
 tags: [RNN, NLP, Recurrent Neural Network, Natural Language Processing, LSTM, Long Short Term Memory, GRU, Gated Recurrent Unit, Visuals, Maths, Mathematics, Flow, Implementation, Simplified, Understanding RNN]
 image: /assets/rnn-images/rnnfront.png
 description: Simplified&#58; Theory, Mathematics, and Flow behind RNN, LSTM and GRU

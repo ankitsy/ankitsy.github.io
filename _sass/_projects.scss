@@ -2,7 +2,7 @@
   border-radius: $rounded-borders;
   text-decoration: none !important;
   margin: 10px auto; // Originally 10px auto
-  box-shadow: -2px 8px 30px -12px rgba(0, 0, 0, 0.14);
+  box-shadow: -2px 8px 30px -12px rgba(0, 0, 0, 0.5);
   
   .card-img-top {
     border-radius: $rounded-borders $rounded-borders 0 0;  // card corners round
@@ -12,6 +12,6 @@
 
   &:hover:not(.post) {
     transform: translateY(-6px); // Originally -8px
-    box-shadow: -2px 8px 40px -12px rgba(0, 0, 0, 0.4); // Originally box-shadow: -2px 8px 40px -12px rgba(0, 0, 0, 0.0.24);
+    box-shadow: -2px 8px 40px -15px rgba(0, 0, 0, 1.4); // Originally box-shadow: -2px 8px 40px -12px rgba(0, 0, 0, 0.0.24);
   }
 }

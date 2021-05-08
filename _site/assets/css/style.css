@@ -337,9 +337,9 @@ body { font-family: "Poppins", sans-serif; }
 .navbar-brand { margin-bottom: -14px; }
 .navbar-brand::after { margin-top: -0.25em; }
 
-.project.card { border-radius: 13px; text-decoration: none !important; margin: 10px auto; box-shadow: -2px 8px 30px -12px rgba(0, 0, 0, 0.14); transition: transform 80ms; }
+.project.card { border-radius: 13px; text-decoration: none !important; margin: 10px auto; box-shadow: -2px 8px 30px -12px rgba(0, 0, 0, 0.5); transition: transform 80ms; }
 .project.card .card-img-top { border-radius: 13px 13px 0 0; }
-.project.card:hover:not(.post) { transform: translateY(-6px); box-shadow: -2px 8px 40px -12px rgba(0, 0, 0, 0.4); }
+.project.card:hover:not(.post) { transform: translateY(-6px); box-shadow: -2px 8px 40px -15px black; }
 
 .skill { margin-bottom: 35px; position: relative; overflow: hidden; }
 .skill > p { margin: 0; font-size: 18px; }
